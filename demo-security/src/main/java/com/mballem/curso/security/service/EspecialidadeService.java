@@ -43,4 +43,14 @@ public class EspecialidadeService {
 		return this.dataTables.getResponse(page);
 	}
 
+	@Transactional(readOnly = true)
+	public Especialidade burcarPorId(Long id) {
+		return this.repository.findById(id).get();
+	}
+	
+	@Transactional(readOnly = false)
+	public void remover(Long id) {
+		this.repository.deleteById(id);
+	}
+
 }

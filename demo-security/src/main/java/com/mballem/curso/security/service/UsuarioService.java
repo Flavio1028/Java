@@ -1,16 +1,23 @@
 package com.mballem.curso.security.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mballem.curso.security.datatables.Datatables;
+import com.mballem.curso.security.datatables.DatatablesColunas;
 import com.mballem.curso.security.domain.Perfil;
 import com.mballem.curso.security.domain.Usuario;
 import com.mballem.curso.security.repository.UsuarioRepository;
@@ -20,6 +27,9 @@ public class UsuarioService implements UserDetailsService {
 
 	@Autowired
 	private UsuarioRepository repository;
+	
+	@Autowired
+	private Datatables datatables; 
 
 	@Transactional(readOnly = true)
 	public Usuario buscarPorEmail(String email) {
@@ -47,6 +57,27 @@ public class UsuarioService implements UserDetailsService {
 		}
 		
 		return authorities;
+	}
+
+	@Transactional(readOnly = true)
+	public Map<String, Object> buscarTodos(HttpServletRequest request) {
+		this.datatables.setRequest(request);
+		this.datatables.setColunas(DatatablesColunas.USUARIOS);
+		
+		Page<Usuario> page = this.datatables.getSearch().isEmpty()
+				? this.repository.findAll(this.datatables.getPageable())
+				: this.repository.findByEmailOrPerfil(this.datatables.getSearch(), this.datatables.getPageable());
+		
+		return this.datatables.getResponse(page);
+	}
+
+	@Transactional(readOnly = false)
+	public void salvarUsuario(Usuario usuario) {
+
+		String crypt = new BCryptPasswordEncoder().encode(usuario.getSenha());
+		usuario.setSenha(crypt);
+
+		this.repository.save(usuario);
 	}
 
 }
