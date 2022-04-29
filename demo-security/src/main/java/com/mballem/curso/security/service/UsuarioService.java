@@ -80,4 +80,15 @@ public class UsuarioService implements UserDetailsService {
 		this.repository.save(usuario);
 	}
 
+	@Transactional(readOnly = true)
+	public Usuario buscarPorId(Long id) {
+		return this.repository.findById(id).get();
+	}
+
+	@Transactional(readOnly = true)
+	public Usuario buscarPorIdEPerfis(Long usuarioId, Long[] perfisId) {
+		return this.repository.findByIdAndPerfis(usuarioId, perfisId)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário inexistente!"));
+	}
+
 }
