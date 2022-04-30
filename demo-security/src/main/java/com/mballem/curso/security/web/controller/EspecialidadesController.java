@@ -1,5 +1,7 @@
 package com.mballem.curso.security.web.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mballem.curso.security.domain.Especialidade;
@@ -52,6 +55,19 @@ public class EspecialidadesController {
 		this.service.remover(id);
 		attr.addFlashAttribute("sucesso", "Operação realizada com sucesso.");
 		return "redirect:/especialidades";
+	}
+	
+	@GetMapping("/titulo")
+	public ResponseEntity<?> getEspecialidadesPorTermo(@RequestParam("termo") String termo) {
+
+		List<String> especialidades = this.service.buscarEspecialidadeByTermo(termo);
+
+		return ResponseEntity.ok(especialidades);
+	}
+	
+	@GetMapping("/datatables/server/medico/{id}")
+	public ResponseEntity<?> getEspecialidadesPorMedico(@PathVariable("id") Long id, HttpServletRequest request) {
+		return ResponseEntity.ok(this.service.burcarEspecialidadesPorMedico(id, request));
 	}
 
 }
