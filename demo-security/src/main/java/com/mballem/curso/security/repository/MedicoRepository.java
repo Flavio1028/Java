@@ -1,5 +1,6 @@
 package com.mballem.curso.security.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,10 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
 	@Query("SELECT m FROM Medico m WHERE m.usuario.email LIKE :email")
 	public Optional<Medico> findByUsuarioEmail(String email);
+	
+	@Query("SELECT DISTINCT m FROM Medico m "
+			+ "join m.especialidades e "
+			+ "WHERE e.titulo LIKE :titulo% "
+			+ "AND m.usuario.ativo = true")
+	public List<Medico> findByMedicosPorEspecialidade(String titulo);
 }
