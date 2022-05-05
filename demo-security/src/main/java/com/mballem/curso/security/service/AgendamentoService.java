@@ -63,5 +63,16 @@ public class AgendamentoService {
 	public Agendamento buscarPorId(Long id) {
 		return this.repository.findById(id).get();
 	}
+	
+	@Transactional(readOnly = false)
+	public void editar(Agendamento agendamento, String email) {
+
+		Agendamento ag = this.buscarPorId(agendamento.getId());
+		ag.setDataConsulta(agendamento.getDataConsulta());
+		ag.setEspecialidade(agendamento.getEspecialidade());
+		ag.setHorario(agendamento.getHorario());
+		ag.setMedico(agendamento.getMedico());
+
+	}
 
 }

@@ -109,21 +109,17 @@ public class AgendamentoController {
 	@PostMapping("/editar")
 	public String editar(Agendamento agendamento, RedirectAttributes attr, @AuthenticationPrincipal User user) {
 
-		Paciente paciente = this.pacienteService.buscarPorUsuarioEmail(user.getUsername());
-		
 		String titulo = agendamento.getEspecialidade().getTitulo();
-		
-		Especialidade especialidade = this.especialidadeService
-				.buscarPorTitulos(new String[] { titulo }).stream().findFirst()
-				.get();
-		
+
+		Especialidade especialidade = this.especialidadeService.buscarPorTitulos(new String[] { titulo }).stream()
+				.findFirst().get();
+
 		agendamento.setEspecialidade(especialidade);
-		agendamento.setPaciente(paciente);
-		
-		this.service.salvar(agendamento);
-		
-		attr.addFlashAttribute("sucesso", "Sua consulta foi agendada com sucesso.");
-		
+
+		this.service.editar(agendamento, user.getUsername());
+
+		attr.addFlashAttribute("sucesso", "Sua consulta foi alterada com sucesso.");
+
 		return "redirect:/agendamentos/agendar";
 	}
 	
