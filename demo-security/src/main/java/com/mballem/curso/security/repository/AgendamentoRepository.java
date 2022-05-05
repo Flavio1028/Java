@@ -2,6 +2,7 @@ package com.mballem.curso.security.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +47,10 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 			+ "FROM Agendamento a "
 			+ "WHERE a.medico.usuario.email LIKE :email")
 	public Page<HistoricoPaciente> findHistoricoByMedicoEmail(String email, Pageable pageable);
+	
+	@Query("SELECT a FROM Agendamento a WHERE  " 
+			+ "( a.id = :id AND a.paciente.usuario.email LIKE :email) "
+			+ " OR ( a.id = :id AND a.medico.usuario.email LIKE :email )")
+	public Optional<Agendamento> findByIdAndPacienteOrMedicoEmail(Long id, String email);
 
 }
