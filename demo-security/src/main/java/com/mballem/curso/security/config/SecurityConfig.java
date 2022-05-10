@@ -1,12 +1,19 @@
 package com.mballem.curso.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.mballem.curso.security.domain.PerfilTipo;
 import com.mballem.curso.security.service.UsuarioService;
@@ -32,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/u/novo/cadastro", "/u/cadastro/realizado", "/u/cadastro/paciente/salvar").permitAll()
 		.antMatchers("/u/confirmacao/cadastro").permitAll()
 		.antMatchers("/u/p/**").permitAll()	
-		
+		.antMatchers("/expired").permitAll()	
+				
 		// acessos privados admin
 		.antMatchers("/u/editar/senha", "/u/confirmar/senha").hasAnyAuthority(PACIENTE, MEDICO)
 		.antMatchers("/u/**").hasAuthority(ADMIN)
@@ -65,12 +73,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.accessDeniedPage("/acesso-negado")
 		.and()
 			.rememberMe();
+
+		http.sessionManagement()
+			.maximumSessions(1)
+			//.maxSessionsPreventsLogin(true)
+			.expiredUrl("/expired")
+			.maxSessionsPreventsLogin(false)
+			.sessionRegistry(this.sessionRegistry());
+		
+		http.sessionManagement()
+			.sessionFixation().newSession()
+			.sessionAuthenticationStrategy(this.sessionAuthStrategy());
 		
 	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(this.service).passwordEncoder(new BCryptPasswordEncoder());
+	}
+	
+	@Bean
+	public SessionAuthenticationStrategy sessionAuthStrategy() {
+		return new RegisterSessionAuthenticationStrategy(this.sessionRegistry());
+	}
+	
+	@Bean
+	public SessionRegistry sessionRegistry() {
+		return new SessionRegistryImpl();
+	}
+	
+	@Bean
+	public ServletListenerRegistrationBean<?> servletListenerRegistrationBean() {
+		return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
 	}
 
 }
