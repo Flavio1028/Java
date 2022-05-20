@@ -2,6 +2,7 @@ package br.com.codeup.social.rest;
 
 import br.com.codeup.social.domain.model.User;
 import br.com.codeup.social.rest.dto.CreateUserRequest;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -29,8 +30,43 @@ public class UserResource {
 
     @GET
     public Response listAllUsers() {
-
-        return Response.ok().build();
+        PanacheQuery<User> query = User.findAll();
+        return Response.ok(query.list()).build();
     }
+
+    @DELETE
+    @Path("{id}")
+    @Transactional
+    public Response deleteUser(@PathParam("id") Long userId) {
+
+        User user = User.findById(userId);
+
+        if(user != null) {
+            user.delete();
+            return Response.ok().build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+    @PUT
+    @Path("{id}")
+    @Transactional
+    public Response updateUser(@PathParam("id") Long userId, CreateUserRequest userData) {
+
+        User user = User.findById(userId);
+
+        if(user != null) {
+            user.setName(userData.getName());
+            user.setAge(userData.getAge());
+
+            user.persist();
+
+            return Response.ok().build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+
 
 }
