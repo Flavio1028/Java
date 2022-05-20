@@ -1,9 +1,10 @@
 package br.com.codeup.social.rest;
 
 import br.com.codeup.social.domain.model.User;
+import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreateUserRequest;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +14,13 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
+
+    private UserRepository repository;
+
+    @Inject
+    public UserResource(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @POST
     @Transactional
@@ -30,8 +38,7 @@ public class UserResource {
 
     @GET
     public Response listAllUsers() {
-        PanacheQuery<User> query = User.findAll();
-        return Response.ok(query.list()).build();
+        return Response.ok(this.repository.findAll().list()).build();
     }
 
     @DELETE
