@@ -1,10 +1,13 @@
 package br.com.codeup.social.rest.dto;
+import lombok.Data;
+
 import javax.validation.ConstraintViolation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Data
 public class ResponseError {
 
     private String message;
@@ -25,19 +28,4 @@ public class ResponseError {
         return new ResponseError(message, error);
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Collection<FieldError> getErros() {
-        return erros;
-    }
-
-    public void setErros(Collection<FieldError> erros) {
-        this.erros = erros;
-    }
 }
