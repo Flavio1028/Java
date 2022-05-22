@@ -2,6 +2,7 @@ package br.com.codeup.social.rest;
 
 import br.com.codeup.social.domain.model.Post;
 import br.com.codeup.social.domain.model.User;
+import br.com.codeup.social.domain.repository.FollowerRepository;
 import br.com.codeup.social.domain.repository.PostRepository;
 import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreatePostRequest;
@@ -14,22 +15,23 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Path("/users/{userId}/posts")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PostResource {
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
-    private UserRepository userRepository;
-
-    private PostRepository postRepository;
+    private final FollowerRepository followerRepository;
 
     @Inject
-    public PostResource( UserRepository userRepository, PostRepository postRepository) {
+    public PostResource( UserRepository userRepository, PostRepository postRepository,
+                         FollowerRepository followerRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.followerRepository = followerRepository;
     }
     @POST
     @Transactional
@@ -51,13 +53,25 @@ public class PostResource {
     }
 
     @GET
-    public Response listPosts(@PathParam("userId") Long userId) {
+    public Response listPosts(@PathParam("userId") Long userId,
+                              @HeaderParam("followerId") Long followerId) {
 
         User user = userRepository.findById(userId);
 
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        if (followerId == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        User follower = this.userRepository.findById(followerId);
+        boolean follows = this.followerRepository.follows(user, follower);
+        if (!follows) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
 
         PanacheQuery<Post> query = this.postRepository
                 .find("user", Sort.by("date_time", Sort.Direction.Descending) ,user);
