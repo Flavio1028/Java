@@ -7,7 +7,6 @@ import br.com.codeup.social.domain.repository.PostRepository;
 import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreatePostRequest;
 import br.com.codeup.social.rest.dto.PostResponse;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 
 import javax.inject.Inject;
@@ -22,24 +21,26 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class PostResource {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
-
+    private final PostRepository repository;
     private final FollowerRepository followerRepository;
 
     @Inject
-    public PostResource( UserRepository userRepository, PostRepository postRepository,
-                         FollowerRepository followerRepository) {
+    public PostResource(
+            UserRepository userRepository,
+            PostRepository repository,
+            FollowerRepository followerRepository) {
         this.userRepository = userRepository;
-        this.postRepository = postRepository;
+        this.repository = repository;
         this.followerRepository = followerRepository;
     }
+
     @POST
     @Transactional
-    public Response savePost(@PathParam("userId") Long userId, CreatePostRequest request) {
+    public Response savePost(
+            @PathParam("userId") Long userId, CreatePostRequest request){
 
         User user = userRepository.findById(userId);
-
-        if (user == null) {
+        if(user == null){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -47,38 +48,54 @@ public class PostResource {
         post.setText(request.getText());
         post.setUser(user);
 
-        this.postRepository.persist(post);
+        repository.persist(post);
 
         return Response.status(Response.Status.CREATED).build();
     }
 
     @GET
-    public Response listPosts(@PathParam("userId") Long userId,
-                              @HeaderParam("followerId") Long followerId) {
+    public Response listPosts(
+            @PathParam("userId") Long userId,
+            @HeaderParam("followerId") Long followerId ){
 
         User user = userRepository.findById(userId);
-
-        if (user == null) {
+        if(user == null){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        if (followerId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        if(followerId == null){
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("You forgot the header followerId")
+                    .build();
         }
 
-        User follower = this.userRepository.findById(followerId);
-        boolean follows = this.followerRepository.follows(user, follower);
-        if (!follows) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+        User follower = userRepository.findById(followerId);
+
+        if(follower == null){
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Inexistent followerId")
+                    .build();
         }
 
+        boolean follows = followerRepository.follows(follower, user);
+        if(!follows){
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("You can't see these posts")
+                    .build();
+        }
 
-        PanacheQuery<Post> query = this.postRepository
-                .find("user", Sort.by("date_time", Sort.Direction.Descending) ,user);
+        var query = repository.find(
+                "user", Sort.by("dateTime", Sort.Direction.Descending) , user);
+        var list = query.list();
 
-        var PostResponseList = query.stream().map(PostResponse::fromEntity).collect(Collectors.toList());
+        var postResponseList = list.stream()
+//                .map(post -> PostResponse.fromEntity(post))
+                .map(PostResponse::fromEntity)
+                .collect(Collectors.toList());
 
-        return Response.ok(PostResponseList).build();
+        return Response.ok(postResponseList).build();
     }
 
 }

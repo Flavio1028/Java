@@ -7,4 +7,5 @@ public class CreatePostRequest {
 
     private String text;
 
+
 }

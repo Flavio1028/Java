@@ -4,6 +4,7 @@ import br.com.codeup.social.domain.model.User;
 import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreateUserRequest;
 import br.com.codeup.social.rest.dto.ResponseError;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -19,74 +20,71 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private UserRepository repository;
-    private Validator validator;
+    private final UserRepository repository;
+    private final Validator validator;
 
     @Inject
-    public UserResource(UserRepository repository, Validator validator) {
+    public UserResource(UserRepository repository, Validator validator){
         this.repository = repository;
         this.validator = validator;
     }
 
     @POST
     @Transactional
-    public Response createUser(CreateUserRequest userRequest) {
+    public Response createUser( CreateUserRequest userRequest ){
 
-        Set<ConstraintViolation<CreateUserRequest>> violations = this.validator.validate(userRequest);
-        if(!violations.isEmpty()) {
-            return Response.status(422).entity(ResponseError.createFormValidation(violations)).build();
+        Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
+        if(!violations.isEmpty()){
+            return ResponseError
+                    .createFromValidation(violations)
+                    .withStatusCode(ResponseError.UNPROCESSABLE_ENTITY_STATUS);
         }
 
         User user = new User();
-        user.setName(userRequest.getName());
         user.setAge(userRequest.getAge());
-        user.persist();
+        user.setName(userRequest.getName());
 
-        return Response.status(Response.Status.CREATED).entity(user).build();
+        repository.persist(user);
+
+        return Response
+                .status(Response.Status.CREATED.getStatusCode())
+                .entity(user)
+                .build();
     }
 
     @GET
-    public Response listAllUsers() {
-        return Response.ok(this.repository.findAll().list()).build();
+    public Response listAllUsers(){
+        PanacheQuery<User> query = repository.findAll();
+        return Response.ok(query.list()).build();
     }
 
     @DELETE
     @Path("{id}")
     @Transactional
-    public Response deleteUser(@PathParam("id") Long userId) {
+    public Response deleteUser( @PathParam("id") Long id){
+        User user = repository.findById(id);
 
-        User user = User.findById(userId);
-
-        if(user != null) {
-            user.delete();
-            return Response.status(Response.Status.NO_CONTENT).build();
+        if(user != null){
+            repository.delete(user);
+            return Response.noContent().build();
         }
 
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
     @PUT
     @Path("{id}")
     @Transactional
-    public Response updateUser(@PathParam("id") Long userId, CreateUserRequest userData) {
+    public Response updateUser( @PathParam("id") Long id, CreateUserRequest userData ){
+        User user = repository.findById(id);
 
-        Set<ConstraintViolation<CreateUserRequest>> violations = this.validator.validate(userData);
-        if(!violations.isEmpty()) {
-            return Response.status(422).entity(ResponseError.createFormValidation(violations)).build();
-        }
-
-        User user = User.findById(userId);
-        if(user != null) {
+        if(user != null){
             user.setName(userData.getName());
             user.setAge(userData.getAge());
-
-            user.persist();
-
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return Response.noContent().build();
         }
 
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
-
 
 }
