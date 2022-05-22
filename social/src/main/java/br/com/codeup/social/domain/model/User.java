@@ -7,17 +7,16 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User extends PanacheEntityBase {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private Integer age;
 
 }

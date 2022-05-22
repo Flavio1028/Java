@@ -15,7 +15,7 @@ public class PostResponse {
 
         PostResponse response = new PostResponse();
         response.setText(post.getText());
-        response.setDateTime(post.getDataTime());
+        response.setDateTime(post.getDateTime());
 
         return response;
 
