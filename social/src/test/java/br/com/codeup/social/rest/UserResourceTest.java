@@ -64,7 +64,7 @@ class UserResourceTest {
         assertEquals(422, response.statusCode());
         assertEquals("Validation Error", response.jsonPath().getString("message"));
 
-        List<Map<String, String>> errors = response.jsonPath().getList("erros");
+        List<Map<String, String>> errors = response.jsonPath().getList("errors");
         assertNotNull(errors.get(0).get("message"));
         assertNotNull(errors.get(1).get("message"));
     }
