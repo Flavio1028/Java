@@ -2,8 +2,13 @@ package com.codeup.crudspring.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +24,7 @@ import com.codeup.crudspring.repository.CourseRepository;
 
 import lombok.AllArgsConstructor;
 
+@Validated
 @RestController
 @RequestMapping("/api/courses")
 @AllArgsConstructor
@@ -32,20 +38,20 @@ public class CourseController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Course> findById(@PathVariable("id") Long id) {
+	public ResponseEntity<Course> findById(@PathVariable("id") @NotNull @Positive Long id) {
 		return repository.findById(id).map(recordFound -> ResponseEntity.ok().body(recordFound))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
-	public ResponseEntity<Course> create(@RequestBody Course course) {
+	public ResponseEntity<Course> create(@RequestBody @Valid Course course) {
 		course = repository.save(course);
 		return ResponseEntity.status(HttpStatus.CREATED).body(course);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Course> update(@PathVariable("id") Long id, 
-	        @RequestBody Course course) {
+	public ResponseEntity<Course> update(@PathVariable("id") @NotNull @Positive Long id, 
+	        @RequestBody @Valid Course course) {
 	    return repository.findById(id).map(recordFound -> {
 	        recordFound.setName(course.getName());
 	        recordFound.setCategory(course.getCategory());
@@ -55,7 +61,7 @@ public class CourseController {
 	}
 	
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @Positive Long id) {
         return repository.findById(id).map(recordFound -> {
             repository.deleteById(id);
             return ResponseEntity.noContent().<Void>build();
