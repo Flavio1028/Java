@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codeup.crudspring.model.Course;
@@ -39,9 +40,8 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Course> findById(@PathVariable("id") @NotNull @Positive Long id) {
-        return this.courseService.findById(id).map(recordFound -> ResponseEntity.ok().body(recordFound))
-                .orElse(ResponseEntity.notFound().build());
+    public Course findById(@PathVariable("id") @NotNull @Positive Long id) {
+        return this.courseService.findById(id);
     }
 
     @PostMapping
@@ -51,18 +51,15 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Course> update(@PathVariable("id") @NotNull @Positive Long id,
+    public Course update(@PathVariable("id") @NotNull @Positive Long id,
             @RequestBody @Valid Course course) {
-        return this.courseService.update(id, course).map(recordFound -> ResponseEntity.ok().body(recordFound))
-                .orElse(ResponseEntity.notFound().build());
+        return this.courseService.update(id, course);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @Positive Long id) {
-        if (this.courseService.delete(id)) {
-            return ResponseEntity.noContent().<Void>build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") @NotNull @Positive Long id) {
+        this.courseService.delete(id);
     }
 
 }
