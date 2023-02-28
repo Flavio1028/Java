@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codeup.crudspring.model.Course;
+import com.codeup.crudspring.dto.CourseDTO;
 import com.codeup.crudspring.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -35,25 +35,24 @@ public class CourseController {
     }
 
     @GetMapping
-    public @ResponseBody List<Course> list() {
+    public @ResponseBody List<CourseDTO> list() {
         return this.courseService.list();
     }
 
     @GetMapping("/{id}")
-    public Course findById(@PathVariable("id") @NotNull @Positive Long id) {
+    public CourseDTO findById(@PathVariable("id") @NotNull @Positive Long id) {
         return this.courseService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Course> create(@RequestBody @Valid Course course) {
-        course = this.courseService.create(course);
-        return ResponseEntity.status(HttpStatus.CREATED).body(course);
+    public ResponseEntity<CourseDTO> create(@RequestBody @Valid CourseDTO courseDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.courseService.create(courseDTO));
     }
 
     @PutMapping("/{id}")
-    public Course update(@PathVariable("id") @NotNull @Positive Long id,
-            @RequestBody @Valid Course course) {
-        return this.courseService.update(id, course);
+    public CourseDTO update(@PathVariable("id") @NotNull @Positive Long id,
+            @RequestBody @Valid CourseDTO courseDTO) {
+        return this.courseService.update(id, courseDTO);
     }
 
     @DeleteMapping("/{id}")
