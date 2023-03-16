@@ -1,5 +1,6 @@
 package com.codeup.crudspring;
 
+import com.codeup.crudspring.enums.CategoryEnum;
 import com.codeup.crudspring.model.Course;
 import com.codeup.crudspring.repository.CourseRepository;
 
@@ -22,7 +23,7 @@ public class CrudSpringApplication {
 
 			Course c = new Course();
 			c.setName("Angular com Spring");
-			c.setCategory("Front-end");
+			c.setCategory(CategoryEnum.FRONT_END);
 
 			repository.save(c);
 		};

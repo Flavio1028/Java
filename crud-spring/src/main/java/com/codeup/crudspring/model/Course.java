@@ -4,9 +4,12 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
+import com.codeup.crudspring.enums.CategoryEnum;
+import com.codeup.crudspring.enums.converters.CategoryEnumConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,11 +39,10 @@ public class Course {
     private String name;
 
     @NotNull
-    @Length(max = 10)
-    @Pattern(regexp = "Back-end|Front-end")
     @Column(name = "categoria", length = 10, nullable = false)
-    private String category;
-    
+    @Convert(converter = CategoryEnumConverter.class)
+    private CategoryEnum category;
+
     @NotNull
     @Length(max = 10)
     @Pattern(regexp = "Ativo|Inativo")
