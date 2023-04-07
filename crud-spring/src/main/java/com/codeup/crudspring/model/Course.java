@@ -5,7 +5,9 @@ import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 import com.codeup.crudspring.enums.CategoryEnum;
+import com.codeup.crudspring.enums.StatusEnum;
 import com.codeup.crudspring.enums.converters.CategoryEnumConverter;
+import com.codeup.crudspring.enums.converters.StatusEnumConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -17,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -34,7 +35,7 @@ public class Course {
 
     @NotBlank
     @NotNull
-    @Length(min = 5, max = 100)
+    @Length(min = 2, max = 100)
     @Column(name = "nome", length = 100, nullable = false)
     private String name;
 
@@ -44,9 +45,8 @@ public class Course {
     private CategoryEnum category;
 
     @NotNull
-    @Length(max = 10)
-    @Pattern(regexp = "Ativo|Inativo")
     @Column(length = 10, nullable = false)
-    private String status = "Ativo";
+    @Convert(converter = StatusEnumConverter.class)
+    private StatusEnum status = StatusEnum.ACTIVE;
 
 }

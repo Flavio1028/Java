@@ -5,11 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.codeup.crudspring.dto.CourseDTO;
 import com.codeup.crudspring.dto.mapper.CourseMapper;
-import com.codeup.crudspring.enums.CategoryEnum;
 import com.codeup.crudspring.exception.RecordNotFoundException;
 import com.codeup.crudspring.repository.CourseRepository;
 
@@ -35,7 +33,7 @@ public class CourseService {
                 .map(courseMapper::toDTO).collect(Collectors.toList());
     }
 
-    public CourseDTO findById(@PathVariable("id") @NotNull @Positive Long id) {
+    public CourseDTO findById(@NotNull @Positive Long id) {
         return repository.findById(id).map(courseMapper::toDTO).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
@@ -47,7 +45,7 @@ public class CourseService {
             @Valid CourseDTO courseDTO) {
         return repository.findById(id).map(recordFound -> {
             recordFound.setName(courseDTO.name());
-            recordFound.setCategory(CategoryEnum.FRONT_END);
+            recordFound.setCategory(courseMapper.converterCategoryEnumValue(courseDTO.category()));
             return courseMapper.toDTO(repository.save(recordFound));
         }).orElseThrow(() -> new RecordNotFoundException(id));
     }

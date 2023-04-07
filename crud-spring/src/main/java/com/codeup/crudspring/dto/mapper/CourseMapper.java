@@ -13,7 +13,7 @@ public class CourseMapper {
         if (course == null) {
             return null;
         }
-        return new CourseDTO(course.getId(), course.getName(), "");
+        return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
     }
 
     public Course toEntity(CourseDTO courseDTO) {
@@ -22,9 +22,20 @@ public class CourseMapper {
             course.setId(courseDTO.Id());
         }
         course.setName(courseDTO.name());
-        course.setCategory(CategoryEnum.FRONT_END);
+        course.setCategory(this.converterCategoryEnumValue(courseDTO.category()));
 
         return course;
     }
 
+    public CategoryEnum converterCategoryEnumValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Front-end" -> CategoryEnum.FRONT_END;
+            case "Back-end" -> CategoryEnum.BACK_END;
+            default -> throw new IllegalArgumentException("Categoria inválida: " + value);
+        };
+    }
+    
 }
