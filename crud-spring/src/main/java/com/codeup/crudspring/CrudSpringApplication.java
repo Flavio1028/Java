@@ -1,13 +1,14 @@
 package com.codeup.crudspring;
 
-import com.codeup.crudspring.enums.CategoryEnum;
-import com.codeup.crudspring.model.Course;
-import com.codeup.crudspring.repository.CourseRepository;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import com.codeup.crudspring.enums.CategoryEnum;
+import com.codeup.crudspring.model.Course;
+import com.codeup.crudspring.model.Lesson;
+import com.codeup.crudspring.repository.CourseRepository;
 
 @SpringBootApplication
 public class CrudSpringApplication {
@@ -24,7 +25,14 @@ public class CrudSpringApplication {
 			Course c = new Course();
 			c.setName("Angular com Spring");
 			c.setCategory(CategoryEnum.FRONT_END);
-
+			
+			Lesson l = new Lesson();
+			l.setName("Introdução");
+			l.setYoutubeUrl("aaaa");
+			l.setCourse(c);
+			c.getLessons().add(l);
+			
+			
 			repository.save(c);
 		};
 	}
