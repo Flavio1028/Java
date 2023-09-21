@@ -20,36 +20,39 @@ public class CourseMapper {
         }
         List<LessonDTO> lessons = course.getLessons()
                 .stream()
-                .map(lessson -> new LessonDTO(lessson.getId(), lessson.getName(), lessson.getYoutubeUrl()))
+                .map(lesson -> new LessonDTO(lesson.getId(), lesson.getName(),
+                        lesson.getYoutubeUrl()))
                 .collect(Collectors.toList());
-
         return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue(),
                 lessons);
     }
 
     public Course toEntity(CourseDTO courseDTO) {
+        if (courseDTO == null) {
+            return null;
+        }
+
         Course course = new Course();
         if (courseDTO.Id() != null) {
             course.setId(courseDTO.Id());
         }
         course.setName(courseDTO.name());
-        course.setCategory(this.converterCategoryEnumValue(courseDTO.category()));
-            
-        
+        course.setCategory(convertCategoryValue(courseDTO.category()));
+
         List<Lesson> lessons = courseDTO.lessons().stream().map(lessonDTO -> {
-           var lesson = new Lesson();
-           lesson.setId(lessonDTO.id());
-           lesson.setName(lessonDTO.name());
-           lesson.setYoutubeUrl(lessonDTO.youtubeUrl());
-           lesson.setCourse(course);
-           return lesson;
+            var lesson = new Lesson();
+            lesson.setId(lessonDTO.id());
+            lesson.setName(lessonDTO.name());
+            lesson.setYoutubeUrl(lessonDTO.youtubeUrl());
+            lesson.setCourse(course);
+            return lesson;
         }).collect(Collectors.toList());
         course.setLessons(lessons);
-        
+
         return course;
     }
 
-    public CategoryEnum converterCategoryEnumValue(String value) {
+    public CategoryEnum convertCategoryValue(String value) {
         if (value == null) {
             return null;
         }
@@ -59,5 +62,5 @@ public class CourseMapper {
             default -> throw new IllegalArgumentException("Categoria inválida: " + value);
         };
     }
-    
+
 }
