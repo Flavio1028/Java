@@ -56,11 +56,18 @@ public class CourseMapper {
         if (value == null) {
             return null;
         }
-        return switch (value) {
-            case "Front-end" -> CategoryEnum.FRONT_END;
-            case "Back-end" -> CategoryEnum.BACK_END;
-            default -> throw new IllegalArgumentException("Categoria inválida: " + value);
-        };
+
+        if (CategoryEnum.valueOf(value) == null) {
+            throw new IllegalArgumentException("Categoria inválida: " + value);
+        }
+
+        return CategoryEnum.valueOf(value);
+
+//        return switch (value) {
+//            case "Front-end" -> CategoryEnum.FRONT_END;
+//            case "Back-end" -> CategoryEnum.BACK_END;
+//            default -> throw new IllegalArgumentException("Categoria inválida: " + value);
+//        };
     }
 
 }
