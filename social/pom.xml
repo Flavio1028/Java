@@ -18,11 +18,11 @@
         <failsafe.useModulePath>false</failsafe.useModulePath>
 
         <!-- Maven plugin version -->
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+        <compiler-plugin.version>3.13.0</compiler-plugin.version>
+        <surefire-plugin.version>3.5.1</surefire-plugin.version>
 
         <!-- Libs versiob -->
-        <quarkus.platform.version>2.9.1.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.16.12.Final</quarkus.platform.version>
     </properties>
 
     <dependencyManagement>
