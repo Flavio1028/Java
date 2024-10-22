@@ -1,11 +1,15 @@
 package br.com.codeup.social.rest.dto;
 
 import br.com.codeup.social.domain.model.Post;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostResponse {
 
     private String text;
