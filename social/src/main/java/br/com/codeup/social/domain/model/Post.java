@@ -1,9 +1,9 @@
 package br.com.codeup.social.domain.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,7 +26,7 @@ public class Post extends PanacheEntityBase {
     private User user;
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         setDateTime(LocalDateTime.now());
     }
 

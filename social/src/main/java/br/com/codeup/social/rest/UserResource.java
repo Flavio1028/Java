@@ -5,14 +5,14 @@ import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreateUserRequest;
 import br.com.codeup.social.rest.dto.ResponseError;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Set;
 
 @Path("/users")
@@ -24,17 +24,17 @@ public class UserResource {
     private final Validator validator;
 
     @Inject
-    public UserResource(UserRepository repository, Validator validator){
+    public UserResource(UserRepository repository, Validator validator) {
         this.repository = repository;
         this.validator = validator;
     }
 
     @POST
     @Transactional
-    public Response createUser( CreateUserRequest userRequest ){
+    public Response createUser(CreateUserRequest userRequest) {
 
         Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
-        if(!violations.isEmpty()){
+        if (!violations.isEmpty()) {
             return ResponseError
                     .createFromValidation(violations)
                     .withStatusCode(ResponseError.UNPROCESSABLE_ENTITY_STATUS);
@@ -53,7 +53,7 @@ public class UserResource {
     }
 
     @GET
-    public Response listAllUsers(){
+    public Response listAllUsers() {
         PanacheQuery<User> query = repository.findAll();
         return Response.ok(query.list()).build();
     }
@@ -61,10 +61,10 @@ public class UserResource {
     @DELETE
     @Path("{id}")
     @Transactional
-    public Response deleteUser( @PathParam("id") Long id){
+    public Response deleteUser(@PathParam("id") Long id) {
         User user = repository.findById(id);
 
-        if(user != null){
+        if (user != null) {
             repository.delete(user);
             return Response.noContent().build();
         }
@@ -75,10 +75,10 @@ public class UserResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response updateUser( @PathParam("id") Long id, CreateUserRequest userData ){
+    public Response updateUser(@PathParam("id") Long id, CreateUserRequest userData) {
         User user = repository.findById(id);
 
-        if(user != null){
+        if (user != null) {
             user.setName(userData.getName());
             user.setAge(userData.getAge());
             return Response.noContent().build();

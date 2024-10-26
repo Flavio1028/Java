@@ -9,10 +9,10 @@
 
     <properties>
         <!-- Java version -->
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Project Configuration -->
-        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failsafe.useModulePath>false</failsafe.useModulePath>
@@ -22,7 +22,7 @@
         <surefire-plugin.version>3.5.1</surefire-plugin.version>
 
         <!-- Libs versiob -->
-        <quarkus.platform.version>2.16.12.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.0.4.Final</quarkus.platform.version>
     </properties>
 
     <dependencyManagement>
@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jsonb</artifactId>
+            <artifactId>quarkus-resteasy-jackson</artifactId>
         </dependency>
 
         <!-- MySQL -->

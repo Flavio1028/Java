@@ -6,12 +6,12 @@ import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.FollowerRequest;
 import br.com.codeup.social.rest.dto.FollowerResponse;
 import br.com.codeup.social.rest.dto.FollowersPerUserResponse;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.stream.Collectors;
 
 @Path("/users/{userId}/follower")
@@ -32,23 +32,23 @@ public class FollowerResource {
     @PUT
     @Transactional
     public Response followUser(
-            @PathParam("userId") Long userId, FollowerRequest request){
+            @PathParam("userId") Long userId, FollowerRequest request) {
 
-        if(userId.equals(request.getFollowerId())){
+        if (userId.equals(request.getFollowerId())) {
             return Response.status(Response.Status.CONFLICT)
                     .entity("You can't follow yourself")
                     .build();
         }
 
         var user = userRepository.findById(userId);
-        if(user == null){
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         var follower = userRepository.findById(request.getFollowerId());
         boolean follows = repository.follows(follower, user);
 
-        if(!follows){
+        if (!follows) {
             var entity = new Follower();
             entity.setUser(user);
             entity.setFollower(follower);
@@ -61,10 +61,10 @@ public class FollowerResource {
     }
 
     @GET
-    public Response listFollowers(@PathParam("userId") Long userId){
+    public Response listFollowers(@PathParam("userId") Long userId) {
 
         var user = userRepository.findById(userId);
-        if(user == null){
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -73,7 +73,7 @@ public class FollowerResource {
         responseObject.setFollowersCount(list.size());
 
         var followerList = list.stream()
-                .map( FollowerResponse::new )
+                .map(FollowerResponse::new)
                 .collect(Collectors.toList());
 
         responseObject.setContent(followerList);
@@ -84,9 +84,9 @@ public class FollowerResource {
     @Transactional
     public Response unfollowUser(
             @PathParam("userId") Long userId,
-            @QueryParam("followerId")  Long followerId ){
+            @QueryParam("followerId") Long followerId) {
         var user = userRepository.findById(userId);
-        if(user == null){
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

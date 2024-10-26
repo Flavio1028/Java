@@ -10,14 +10,13 @@ import br.com.codeup.social.rest.dto.CreatePostRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import static io.restassured.RestAssured.given;
 

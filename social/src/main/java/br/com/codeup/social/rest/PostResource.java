@@ -8,12 +8,12 @@ import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreatePostRequest;
 import br.com.codeup.social.rest.dto.PostResponse;
 import io.quarkus.panache.common.Sort;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.stream.Collectors;
 
 @Path("/users/{userId}/posts")
@@ -37,10 +37,10 @@ public class PostResource {
     @POST
     @Transactional
     public Response savePost(
-            @PathParam("userId") Long userId, CreatePostRequest request){
+            @PathParam("userId") Long userId, CreatePostRequest request) {
 
         User user = userRepository.findById(userId);
-        if(user == null){
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -56,14 +56,14 @@ public class PostResource {
     @GET
     public Response listPosts(
             @PathParam("userId") Long userId,
-            @HeaderParam("followerId") Long followerId ){
+            @HeaderParam("followerId") Long followerId) {
 
         User user = userRepository.findById(userId);
-        if(user == null){
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        if(followerId == null){
+        if (followerId == null) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("You forgot the header followerId")
@@ -72,7 +72,7 @@ public class PostResource {
 
         User follower = userRepository.findById(followerId);
 
-        if(follower == null){
+        if (follower == null) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Inexistent followerId")
@@ -80,14 +80,14 @@ public class PostResource {
         }
 
         boolean follows = followerRepository.follows(follower, user);
-        if(!follows){
+        if (!follows) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity("You can't see these posts")
                     .build();
         }
 
         var query = repository.find(
-                "user", Sort.by("dateTime", Sort.Direction.Descending) , user);
+                "user", Sort.by("dateTime", Sort.Direction.Descending), user);
         var list = query.list();
 
         var postResponseList = list.stream()

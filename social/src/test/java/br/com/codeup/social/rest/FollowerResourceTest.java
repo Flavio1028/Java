@@ -8,12 +8,11 @@ import br.com.codeup.social.rest.dto.FollowerRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
-
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
