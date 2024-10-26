@@ -9,7 +9,7 @@
 
     <properties>
         <!-- Java version -->
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
 
         <!-- Project Configuration -->
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
@@ -22,7 +22,7 @@
         <surefire-plugin.version>3.5.1</surefire-plugin.version>
 
         <!-- Libs versiob -->
-        <quarkus.platform.version>3.0.4.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.16.0</quarkus.platform.version>
     </properties>
 
     <dependencyManagement>
@@ -68,18 +68,11 @@
             <artifactId>quarkus-resteasy-jackson</artifactId>
         </dependency>
 
-        <!-- MySQL -->
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jdbc-mysql</artifactId>
-            <version>2.9.1.Final</version>
-        </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.34</version>
         </dependency>
 
         <!-- Tests -->
@@ -91,6 +84,14 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Plugins -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -127,7 +128,6 @@
                 <configuration>
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -155,12 +155,8 @@
                                 </goals>
                                 <configuration>
                                     <systemPropertyVariables>
-                                        <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner
-                                        </native.image.path>
-                                        <java.util.logging.manager>org.jboss.logmanager.LogManager
-                                        </java.util.logging.manager>
-                                        <maven.home>${maven.home}</maven.home>
+                                        <native.image.path>target/my-project-runner</native.image.path>
+                                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>
