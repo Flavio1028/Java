@@ -1,0 +1,326 @@
+{
+	"info": {
+		"_postman_id": "ded700f4-ce9a-4734-a579-df5b46b06908",
+		"name": "Social App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12426550"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "List All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_social}}/users",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teste\",\r\n    \"age\": 35\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_social}}/users",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teste Alteracao\",\r\n    \"age\": 25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_social}}/users/:id",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_social}}/users/:id",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Save Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Post test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_social}}/users/:userId/posts",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"posts"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "followerId",
+								"value": "2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url_social}}/users/:userId/posts",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"posts"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Follower",
+			"item": [
+				{
+					"name": "Follow User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"followerId\": \"2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_social}}/users/:userId/follower",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"follower"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Followers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_social}}/users/:userId/follower",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"follower"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_social}}/users/:userId/follower?followerId=2",
+							"host": [
+								"{{url_social}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"follower"
+							],
+							"query": [
+								{
+									"key": "followerId",
+									"value": "2"
+								}
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Hello",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_social}}/hello",
+					"host": [
+						"{{url_social}}"
+					],
+					"path": [
+						"hello"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url_social",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

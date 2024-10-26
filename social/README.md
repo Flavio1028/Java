@@ -1,60 +1,42 @@
-# social Project
+# Mine Rede Social
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Esta é uma aplicação simples que simula alguns comportamentos de uma rede social, desenvolvida com Quarkus.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Tecnologias Usadas
 
-## Running the application in dev mode
+- **Java**: 21
+- **Quarkus**: 3.16.0
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
+*Nota: O projeto foi originalmente criado com Java 11 e Quarkus 2.9.1.Final.*
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+## Configuração Local
 
-## Packaging and running the application
+### Instalar o Plugin Quarkus no IntelliJ IDEA
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+1. No menu superior, clique em File > Settings (ou pressione Ctrl + Alt + S).
+2. No painel à esquerda, clique em Plugins.
+3. Na aba Marketplace, digite "Quarkus" na barra de busca.
+4. Quando encontrar o plugin Quarkus, clique em Install.
+5. Após a instalação, clique em Restart IDE para aplicar as mudanças.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+### Subir o Projeto
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+1. Vá para `Run` > `Edit Configurations`.
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+   ![Configuração do Arquivo Atual](docs/img/01.png)
 
-## Creating a native executable
+2. Na janela que se abre, clique em `+` e escolha `Quarkus` na lista de opções.
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+   ![Adicionar Quarkus](docs/img/02.png)
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
+3. Preencha os campos como nome do projeto, `Working Directory` e defina a versão do Java como 21.
 
-You can then execute your native executable with: `./target/social-1.0.0-runner`
+   ![Configuração do Projeto](docs/img/03.png)
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+4. Clique em `Apply` e depois em `Run`.
 
-## Related Guides
+   ![Executar o Projeto](docs/img/04.png)
 
-- RESTEasy Classic ([guide](https://quarkus.io/guides/resteasy)): REST endpoint framework implementing JAX-RS and more
+## Licença
 
-## Provided Code
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
