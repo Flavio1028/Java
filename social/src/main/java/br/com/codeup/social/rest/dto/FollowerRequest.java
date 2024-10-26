@@ -1,8 +1,12 @@
 package br.com.codeup.social.rest.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FollowerRequest {
 
     private Long followerId;

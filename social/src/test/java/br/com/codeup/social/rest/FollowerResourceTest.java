@@ -8,15 +8,14 @@ import br.com.codeup.social.rest.dto.FollowerRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
 @TestHTTPEndpoint(FollowerResource.class)
@@ -25,14 +24,16 @@ class FollowerResourceTest {
 
     @Inject
     FollowerRepository repository;
+
     @Inject
     UserRepository userRepository;
+
     Long userId;
 
     Long followerId;
 
-    @BeforeEach
     @Transactional
+    @BeforeEach
     void setUP() {
 
         //usuario padrão dos testes
@@ -56,9 +57,16 @@ class FollowerResourceTest {
 
     }
 
+    @Transactional
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     @Order(1)
-    public void saveUserAsFollowerTest() {
+    void saveUserAsFollowerTest() {
 
         var body = new FollowerRequest();
         body.setFollowerId(userId);
@@ -67,16 +75,16 @@ class FollowerResourceTest {
                 .contentType(ContentType.JSON)
                 .body(body)
                 .pathParam("userId", userId)
-        .when()
+                .when()
                 .put()
-        .then()
+                .then()
                 .statusCode(409)
                 .body(Matchers.is("You can't follow yourself"));
     }
 
     @Test
     @Order(2)
-    public void userNotFoundFollowTest() {
+    void userNotFoundFollowTest() {
 
         var body = new FollowerRequest();
         var idTest = 999;
@@ -93,7 +101,7 @@ class FollowerResourceTest {
 
     @Test
     @Order(3)
-    public void FollowerUserTest() {
+    void FollowerUserTest() {
 
         var body = new FollowerRequest();
         body.setFollowerId(followerId);
@@ -102,15 +110,15 @@ class FollowerResourceTest {
                 .contentType(ContentType.JSON)
                 .body(body)
                 .pathParam("userId", userId)
-        .when()
+                .when()
                 .put()
-        .then()
+                .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test
     @Order(5)
-    public void userNotFoundListTest() {
+    void userNotFoundListTest() {
 
         var idTest = 999;
 
@@ -118,22 +126,22 @@ class FollowerResourceTest {
                 .contentType(ContentType.JSON)
                 .pathParam("userId", idTest)
                 .when()
-        .get()
+                .get()
                 .then()
-        .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
     @Order(4)
-    public void listFollowersTest() {
+    void listFollowersTest() {
         var response =
-        given()
-                .contentType(ContentType.JSON)
-                .pathParam("userId", userId)
-        .when()
-                .get()
-        .then()
-                .extract().response();
+                given()
+                        .contentType(ContentType.JSON)
+                        .pathParam("userId", userId)
+                        .when()
+                        .get()
+                        .then()
+                        .extract().response();
 
         var cont = response.jsonPath().get("followersCount");
 
@@ -144,29 +152,29 @@ class FollowerResourceTest {
 
     @Test
     @Order(6)
-    public void userNotFoundDeleteTest() {
+    void userNotFoundDeleteTest() {
 
         var idTest = 999;
 
         given()
                 .pathParam("userId", idTest)
                 .queryParam("followerId", followerId)
-        .when()
+                .when()
                 .delete()
-        .then()
+                .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
     @Order(6)
-    public void followerDeleteTest() {
+    void followerDeleteTest() {
 
         given()
                 .pathParam("userId", userId)
                 .queryParam("followerId", followerId)
-        .when()
+                .when()
                 .delete()
-        .then()
+                .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 

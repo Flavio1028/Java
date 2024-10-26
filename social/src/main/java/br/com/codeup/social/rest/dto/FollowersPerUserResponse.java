@@ -1,10 +1,14 @@
 package br.com.codeup.social.rest.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FollowersPerUserResponse {
 
     private Integer followersCount;

@@ -1,8 +1,8 @@
 package br.com.codeup.social.domain.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "followers")

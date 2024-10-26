@@ -10,20 +10,22 @@ import org.junit.jupiter.api.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserResourceTest {
 
     @TestHTTPResource("/users")
     URL apiURL;
+
     @Test
     @DisplayName("Criar um usuario com sucesso.")
     @Order(1)
-    public void createUserTest() {
+    void createUserTest() {
 
         var user = new CreateUserRequest();
         user.setName("Cliente teste");
@@ -33,9 +35,9 @@ class UserResourceTest {
                 given()
                         .contentType(ContentType.JSON)
                         .body(user)
-                .when()
+                        .when()
                         .post("/users")
-                .then()
+                        .then()
                         .extract().response();
 
         assertEquals(201, response.statusCode());
@@ -46,7 +48,7 @@ class UserResourceTest {
     @Test
     @DisplayName("Criar um usuario com erro.")
     @Order(2)
-    public void createUserValidationErrorTest() {
+    void createUserValidationErrorTest() {
 
         var user = new CreateUserRequest();
         user.setName(null);
@@ -56,9 +58,9 @@ class UserResourceTest {
                 given()
                         .contentType(ContentType.JSON)
                         .body(user)
-                .when()
+                        .when()
                         .post(apiURL)
-                .then()
+                        .then()
                         .extract().response();
 
         assertEquals(422, response.statusCode());
@@ -72,13 +74,13 @@ class UserResourceTest {
     @Test
     @DisplayName("Listar todos os usuarios.")
     @Order(3)
-    public void listAllUsersTest() {
+    void listAllUsersTest() {
 
         given()
                 .contentType(ContentType.JSON)
-        .when()
+                .when()
                 .get(apiURL)
-        .then()
+                .then()
                 .statusCode(200)
                 .body("size()", Matchers.is(1));
     }

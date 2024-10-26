@@ -1,6 +1,5 @@
 package br.com.codeup.social.rest;
 
-
 import br.com.codeup.social.domain.model.Follower;
 import br.com.codeup.social.domain.model.Post;
 import br.com.codeup.social.domain.model.User;
@@ -11,16 +10,15 @@ import br.com.codeup.social.rest.dto.CreatePostRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @TestHTTPEndpoint(PostResource.class)
@@ -28,8 +26,10 @@ class PostResourceTest {
 
     @Inject
     UserRepository userRepository;
+
     @Inject
     FollowerRepository followerRepository;
+
     @Inject
     PostRepository postRepository;
 
@@ -39,7 +39,7 @@ class PostResourceTest {
 
     @BeforeEach
     @Transactional
-    public void setUP(){
+    public void setUP() {
         //usuario padrão dos testes
         var user = new User();
         user.setAge(30);
@@ -74,9 +74,17 @@ class PostResourceTest {
 
     }
 
+    @Transactional
+    @AfterEach
+    void tearDown() {
+        postRepository.deleteAll();
+        followerRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("should create a post for a user")
-    public void createPostTest(){
+    void createPostTest() {
         var postRequest = new CreatePostRequest();
         postRequest.setText("Some text");
 
@@ -92,7 +100,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should return 404 when trying to make a post for an inexistent user")
-    public void postForAnInexistentUserTest(){
+    void postForAnInexistentUserTest() {
         var postRequest = new CreatePostRequest();
         postRequest.setText("Some text");
 
@@ -110,7 +118,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should return 404 when user doesn't exist")
-    public void listPostUserNotFoundTest(){
+    void listPostUserNotFoundTest() {
         var inexistentUserId = 999;
 
         given()
@@ -123,7 +131,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should return 400 when followerId header is not present")
-    public void listPostFollowerHeaderNotSendTest(){
+    void listPostFollowerHeaderNotSendTest() {
         given()
                 .pathParam("userId", userId)
                 .when()
@@ -135,7 +143,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should return 400 when follower doesn't exist")
-    public void listPostFollowerNotFoundTest(){
+    void listPostFollowerNotFoundTest() {
 
         var inexistentFollowerId = 999;
 
@@ -151,7 +159,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should return 403 when follower isn't a follower")
-    public void listPostNotAFollower(){
+    void listPostNotAFollower() {
         given()
                 .pathParam("userId", userId)
                 .header("followerId", userNotFollowerId)
@@ -164,7 +172,7 @@ class PostResourceTest {
 
     @Test
     @DisplayName("should list posts")
-    public void listPostsTest(){
+    void listPostsTest() {
         given()
                 .pathParam("userId", userId)
                 .header("followerId", userFollowerId)
@@ -174,4 +182,5 @@ class PostResourceTest {
                 .statusCode(200)
                 .body("size()", Matchers.is(1));
     }
+
 }

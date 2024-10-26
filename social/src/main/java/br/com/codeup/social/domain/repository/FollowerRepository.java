@@ -4,8 +4,8 @@ import br.com.codeup.social.domain.model.Follower;
 import br.com.codeup.social.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class FollowerRepository implements PanacheRepository<Follower> {
         Optional<Follower> result = query.firstResultOptional();
 
         return result.isPresent();
-    };
+    }
 
     public List<Follower> findByUser(Long userId) {
         return this.find("user.id", userId).list();
