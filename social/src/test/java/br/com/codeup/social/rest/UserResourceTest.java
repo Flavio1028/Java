@@ -82,7 +82,11 @@ class UserResourceTest {
                 .get(apiURL)
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(1));
+                .body("items.size()", Matchers.is(1))
+                .body("totalItems", Matchers.is(1))
+                .body("pageNumber", Matchers.is(1))
+                .body("pageSize", Matchers.is(10))
+                .body("totalPages", Matchers.is(1));
     }
 
 }

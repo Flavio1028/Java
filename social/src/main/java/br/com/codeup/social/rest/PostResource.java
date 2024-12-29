@@ -6,6 +6,7 @@ import br.com.codeup.social.domain.repository.FollowerRepository;
 import br.com.codeup.social.domain.repository.PostRepository;
 import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreatePostRequest;
+import br.com.codeup.social.rest.dto.PaginationResponse;
 import br.com.codeup.social.rest.dto.PostResponse;
 import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
@@ -13,8 +14,6 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.stream.Collectors;
 
 @Path("/users/{userId}/posts")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -56,7 +55,9 @@ public class PostResource {
     @GET
     public Response listPosts(
             @PathParam("userId") Long userId,
-            @HeaderParam("followerId") Long followerId) {
+            @HeaderParam("followerId") Long followerId,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
 
         User user = userRepository.findById(userId);
         if (user == null) {
@@ -87,15 +88,19 @@ public class PostResource {
         }
 
         var query = repository.find(
-                "user", Sort.by("dateTime", Sort.Direction.Descending), user);
-        var list = query.list();
+                        "user", Sort.by("dateTime", Sort.Direction.Descending), user)
+                .page(page, pageSize);
+        long totalItems = query.count();
 
-        var postResponseList = list.stream()
-//                .map(post -> PostResponse.fromEntity(post))
-                .map(PostResponse::fromEntity)
-                .collect(Collectors.toList());
+        PaginationResponse response = PaginationResponse.builder()
+                .items(query.list().stream().map(PostResponse::fromEntity).toList())
+                .totalItems(totalItems)
+                .pageNumber(page)
+                .pageSize(pageSize)
+                .totalPages((long) Math.ceil((double) totalItems / pageSize))
+                .build();
 
-        return Response.ok(postResponseList).build();
+        return Response.ok(response).build();
     }
 
 }

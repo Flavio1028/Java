@@ -3,6 +3,7 @@ package br.com.codeup.social.rest;
 import br.com.codeup.social.domain.model.User;
 import br.com.codeup.social.domain.repository.UserRepository;
 import br.com.codeup.social.rest.dto.CreateUserRequest;
+import br.com.codeup.social.rest.dto.PaginationResponse;
 import br.com.codeup.social.rest.dto.ResponseError;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.inject.Inject;
@@ -53,9 +54,19 @@ public class UserResource {
     }
 
     @GET
-    public Response listAllUsers() {
-        PanacheQuery<User> query = repository.findAll();
-        return Response.ok(query.list()).build();
+    public Response listAllUsers(@QueryParam("page") @DefaultValue("0") int page,
+                                 @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+
+        PanacheQuery<User> query = repository.findAll().page(page, pageSize);
+        long totalItems = query.count();
+        return Response.ok(PaginationResponse.builder()
+                        .items(query.list())
+                        .totalItems(totalItems)
+                        .pageNumber(++page)
+                        .pageSize(pageSize)
+                        .totalPages((long) Math.ceil((double) totalItems / pageSize))
+                        .build())
+                .build();
     }
 
     @DELETE
