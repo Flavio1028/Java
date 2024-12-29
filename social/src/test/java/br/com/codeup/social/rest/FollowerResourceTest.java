@@ -79,7 +79,7 @@ class FollowerResourceTest {
                 .put()
                 .then()
                 .statusCode(409)
-                .body(Matchers.is("You can't follow yourself"));
+                .body(Matchers.is("{\"message\":\"You can't follow yourself\"}"));
     }
 
     @Test

@@ -5,6 +5,8 @@ import br.com.codeup.social.domain.model.User;
 import br.com.codeup.social.domain.repository.FollowerRepository;
 import br.com.codeup.social.domain.repository.PostRepository;
 import br.com.codeup.social.domain.repository.UserRepository;
+import br.com.codeup.social.exceptions.ForbiddenFollowsExcepetion;
+import br.com.codeup.social.exceptions.ParametersException;
 import br.com.codeup.social.rest.dto.CreatePostRequest;
 import br.com.codeup.social.rest.dto.PaginationResponse;
 import br.com.codeup.social.rest.dto.PostResponse;
@@ -65,26 +67,18 @@ public class PostResource {
         }
 
         if (followerId == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity("You forgot the header followerId")
-                    .build();
+            throw new ParametersException("You forgot the header followerId");
         }
 
         User follower = userRepository.findById(followerId);
 
         if (follower == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity("Inexistent followerId")
-                    .build();
+            throw new ParametersException("Inexistent followerId");
         }
 
         boolean follows = followerRepository.follows(follower, user);
         if (!follows) {
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity("You can't see these posts")
-                    .build();
+            throw new ForbiddenFollowsExcepetion("You can't see these posts");
         }
 
         var query = repository.find(

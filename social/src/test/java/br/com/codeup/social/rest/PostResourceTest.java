@@ -138,7 +138,7 @@ class PostResourceTest {
                 .get()
                 .then()
                 .statusCode(400)
-                .body(Matchers.is("You forgot the header followerId"));
+                .body(Matchers.is("{\"message\":\"You forgot the header followerId\"}"));
     }
 
     @Test
@@ -154,7 +154,7 @@ class PostResourceTest {
                 .get()
                 .then()
                 .statusCode(400)
-                .body(Matchers.is("Inexistent followerId"));
+                .body(Matchers.is("{\"message\":\"Inexistent followerId\"}"));
     }
 
     @Test
@@ -167,7 +167,7 @@ class PostResourceTest {
                 .get()
                 .then()
                 .statusCode(403)
-                .body(Matchers.is("You can't see these posts"));
+                .body(Matchers.is("{\"message\":\"You can't see these posts\"}"));
     }
 
     @Test

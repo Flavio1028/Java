@@ -3,6 +3,7 @@ package br.com.codeup.social.rest;
 import br.com.codeup.social.domain.model.Follower;
 import br.com.codeup.social.domain.repository.FollowerRepository;
 import br.com.codeup.social.domain.repository.UserRepository;
+import br.com.codeup.social.rest.dto.FieldError;
 import br.com.codeup.social.rest.dto.FollowerRequest;
 import br.com.codeup.social.rest.dto.FollowerResponse;
 import br.com.codeup.social.rest.dto.FollowersPerUserResponse;
@@ -36,7 +37,7 @@ public class FollowerResource {
 
         if (userId.equals(request.getFollowerId())) {
             return Response.status(Response.Status.CONFLICT)
-                    .entity("You can't follow yourself")
+                    .entity(new FieldError("You can't follow yourself"))
                     .build();
         }
 
