@@ -11,6 +11,9 @@
         <!-- Java version -->
         <maven.compiler.release>21</maven.compiler.release>
 
+        <!-- Quarkus version-->
+        <quarkus.platform.version>3.17.5</quarkus.platform.version>
+
         <!-- Project Configuration -->
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -19,10 +22,8 @@
 
         <!-- Maven plugin version -->
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
-        <surefire-plugin.version>3.5.1</surefire-plugin.version>
+        <surefire-plugin.version>3.5.2</surefire-plugin.version>
 
-        <!-- Libs versiob -->
-        <quarkus.platform.version>3.16.0</quarkus.platform.version>
     </properties>
 
     <dependencyManagement>
@@ -73,6 +74,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
+        </dependency>
+
+        <!-- Database -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
 
         <!-- Tests -->

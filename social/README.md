@@ -5,9 +5,9 @@ Esta é uma aplicação simples que simula alguns comportamentos de uma rede soc
 ## Tecnologias Usadas
 
 - **Java**: 21
-- **Quarkus**: 3.16.0
+- **Quarkus**: 3.17.5
 
-*Nota: O projeto foi originalmente criado com Java 11 e Quarkus 2.9.1.Final.*
+* Nota: O projeto foi originalmente criado com Java 11 e Quarkus 2.9.1.Final.*
 
 ## Configuração Local
 
@@ -36,6 +36,15 @@ Esta é uma aplicação simples que simula alguns comportamentos de uma rede soc
 4. Clique em `Apply` e depois em `Run`.
 
    ![Executar o Projeto](docs/img/04.png)
+
+5. Executar o Docker
+
+   - Navegue até a pasta `/docker`.
+   - Execute o seguinte comando para iniciar os containers:
+
+ ```bash
+     docker-compose up
+```
 
 ## Licença
 
