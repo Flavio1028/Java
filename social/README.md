@@ -5,7 +5,7 @@ Esta é uma aplicação simples que simula alguns comportamentos de uma rede soc
 ## Tecnologias Usadas
 
 - **Java**: 21
-- **Quarkus**: 3.17.5
+- **Quarkus**: 3.19.1
 
 * Nota: O projeto foi originalmente criado com Java 11 e Quarkus 2.9.1.Final.*
 

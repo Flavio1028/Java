@@ -12,7 +12,7 @@
         <maven.compiler.release>21</maven.compiler.release>
 
         <!-- Quarkus version-->
-        <quarkus.platform.version>3.17.5</quarkus.platform.version>
+        <quarkus.platform.version>3.19.1</quarkus.platform.version>
 
         <!-- Project Configuration -->
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
+            <version>1.18.36</version>
         </dependency>
 
         <!-- Database -->
