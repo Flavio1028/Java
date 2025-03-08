@@ -1,32 +1,30 @@
 package com.codeup.crudspring.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-
 import com.codeup.crudspring.dto.CourseDTO;
 import com.codeup.crudspring.dto.CoursePageDTO;
 import com.codeup.crudspring.dto.mapper.CourseMapper;
 import com.codeup.crudspring.exception.RecordNotFoundException;
 import com.codeup.crudspring.model.Course;
 import com.codeup.crudspring.repository.CourseRepository;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
 public class CourseService {
 
     private final CourseRepository repository;
-    
+
     private final CourseMapper courseMapper;
 
     public CourseService(CourseRepository repository, CourseMapper courseMapper) {
@@ -57,7 +55,10 @@ public class CourseService {
                     recordFound.setName(courseDTO.name());
                     recordFound.setCategory(courseMapper.convertCategoryValue(courseDTO.category()));
                     recordFound.getLessons().clear();
-                    course.getLessons().forEach(recordFound.getLessons()::add);
+                    course.getLessons().forEach(lesson -> {
+                        lesson.setCourse(recordFound);
+                        recordFound.getLessons().add(lesson);
+                    });
                     return courseMapper.toDTO(repository.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }

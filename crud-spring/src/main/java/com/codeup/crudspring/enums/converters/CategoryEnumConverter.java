@@ -1,11 +1,10 @@
 package com.codeup.crudspring.enums.converters;
 
-import java.util.stream.Stream;
-
 import com.codeup.crudspring.enums.CategoryEnum;
-
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+
+import java.util.stream.Stream;
 
 @Converter(autoApply = true)
 public class CategoryEnumConverter implements AttributeConverter<CategoryEnum, String> {

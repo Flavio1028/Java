@@ -1,11 +1,11 @@
 package com.codeup.crudspring.enums.validation;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
     private List<String> acceptedValues;
@@ -25,5 +25,5 @@ public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, Ch
 
         return acceptedValues.contains(value.toString());
     }
-    
+
 }

@@ -1,15 +1,14 @@
 package com.codeup.crudspring.dto.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
 import com.codeup.crudspring.dto.CourseDTO;
 import com.codeup.crudspring.dto.LessonDTO;
 import com.codeup.crudspring.enums.CategoryEnum;
 import com.codeup.crudspring.model.Course;
 import com.codeup.crudspring.model.Lesson;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CourseMapper {
