@@ -8,7 +8,6 @@ import com.codeup.crudspring.model.Lesson;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CourseMapper {
@@ -21,7 +20,7 @@ public class CourseMapper {
                 .stream()
                 .map(lesson -> new LessonDTO(lesson.getId(), lesson.getName(),
                         lesson.getYoutubeUrl()))
-                .collect(Collectors.toList());
+                .toList();
         return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue(),
                 lessons);
     }
@@ -45,7 +44,7 @@ public class CourseMapper {
             lesson.setYoutubeUrl(lessonDTO.youtubeUrl());
             lesson.setCourse(course);
             return lesson;
-        }).collect(Collectors.toList());
+        }).toList();
         course.setLessons(lessons);
 
         return course;

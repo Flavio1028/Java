@@ -35,7 +35,7 @@ public class CourseService {
     public CoursePageDTO list(@PositiveOrZero int page, @Positive @Max(250) int pageSize) {
 
         Page<Course> pageCourse = repository.findAll(PageRequest.of(page, pageSize));
-        List<CourseDTO> courses = pageCourse.get().map(courseMapper::toDTO).collect(Collectors.toList());
+        List<CourseDTO> courses = pageCourse.get().map(courseMapper::toDTO).toList();
 
         return new CoursePageDTO(courses, pageCourse.getTotalElements(), pageCourse.getTotalPages());
     }
