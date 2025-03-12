@@ -11,7 +11,7 @@ Este repositório contém vários projetos em Java desenvolvidos para testar dif
 
 ### Descrição dos Projetos
 
-1. **CRUD Spring**: ---
+1. **CRUD Spring**: Aplicação para o gerenciamento do CRUD de cursos.
 2. **Demo Security**: ---
 3. **Social**: Aplicação simples que simula alguns comportamentos de uma rede social.
 
