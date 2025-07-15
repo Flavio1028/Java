@@ -10,7 +10,7 @@ Funcionalidades:
 
 ## Tecnologias Utilizadas
 
-- Spring Boot 3.4.3
+- Spring Boot 3.5.3
 - Java 21 
 - JUnit 5
 
